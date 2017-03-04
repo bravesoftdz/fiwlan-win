@@ -92,6 +92,12 @@
             <Form>Form1</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="dep\dcef3\ceffmx.pas"/>
+        <DCCReference Include="dep\dcef3\cefgui.pas"/>
+        <DCCReference Include="dep\dcef3\ceflib.pas"/>
+        <DCCReference Include="dep\dcef3\cefvcl.pas"/>
+        <DCCReference Include="dep\dcef3\ceferr.pas"/>
+        <None Include="dep\dcef3\cef.inc"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
