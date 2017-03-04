@@ -9,7 +9,6 @@ uses
 
 type
   TForm1 = class(TForm)
-    Panel1: TPanel;
   private
     { Private declarations }
   public
