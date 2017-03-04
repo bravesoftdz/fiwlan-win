@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{7B3172C8-E308-4F2B-B494-87BCEA375793}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="background\fiwlanback.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="frontend\Frontend.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="fiwlanback">
+        <MSBuild Projects="background\fiwlanback.dproj"/>
+    </Target>
+    <Target Name="fiwlanback:Clean">
+        <MSBuild Projects="background\fiwlanback.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fiwlanback:Make">
+        <MSBuild Projects="background\fiwlanback.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Frontend">
+        <MSBuild Projects="frontend\Frontend.dproj"/>
+    </Target>
+    <Target Name="Frontend:Clean">
+        <MSBuild Projects="frontend\Frontend.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Frontend:Make">
+        <MSBuild Projects="frontend\Frontend.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="fiwlanback;Frontend"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="fiwlanback:Clean;Frontend:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="fiwlanback:Make;Frontend:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
