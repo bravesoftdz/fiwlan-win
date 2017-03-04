@@ -2,8 +2,8 @@ unit WindowsWlanGetter;
 
 interface
 
-uses nduWlanAPI, System.Types, System.SysUtils, System.Classes, nduWlanTypes, WlanInfo,
-    System.Generics.Collections;
+uses nduWlanAPI, System.Types, System.SysUtils, System.Classes, nduWlanTypes,
+    FIWClasses, System.Generics.Collections;
 
 type
 
@@ -23,6 +23,7 @@ var Handle: DWORD;
     SDummy: string; //Buf string
     NewNetwork: TWlanInfo;
 begin
+  SDummy:='';
   Result:=TObjectList<TWlanInfo>.Create(true);
   {Get handle of wlan api}
   if not WlanOpenHandle(2,nil,@NegotiatedVersion,@Handle)=0 then
@@ -45,6 +46,7 @@ begin
          {if network is open, save the information}
          for j:=0 to pAvailableNetworkList^.dwNumberOfItems - 1 do
          begin
+           SDummy:='';
            if not (pAvailableNetworkList^.Network[j].dot11DefaultAuthAlgorithm
            =DOT11_AUTH_ALGO_80211_OPEN) then
              continue;
@@ -55,7 +57,7 @@ begin
            if SDummy.Trim='' then
                continue;
            NewNetwork:=TWlanInfo.Create;
-           NewNetwork.Name:=SDummy;
+           NewNetwork.Name:=SDummy.Trim;
            Result.Add(NewNetwork);
          end;
         end;

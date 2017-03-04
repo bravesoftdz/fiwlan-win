@@ -15,8 +15,12 @@ uses
   nduNtDDNdis in 'deps\WlanAPI\nduNtDDNdis.pas',
   nduWinDot11 in 'deps\WlanAPI\nduWinDot11.pas',
   nduWinNT in 'deps\WlanAPI\nduWinNT.pas',
-  WlanInfo in 'WlanInfo.pas',
-  WindowsWlanGetter in 'WindowsWlanGetter.pas';
+  FIWClasses in 'FIWClasses.pas',
+  WindowsWlanGetter in 'WindowsWlanGetter.pas',
+  WindowsLocationInfo in 'WindowsLocationInfo.pas',
+  FIWSender in 'FIWSender.pas',
+  XSuperJSON in 'deps\x-superobject\XSuperJSON.pas',
+  XSuperObject in 'deps\x-superobject\XSuperObject.pas';
 
 begin
   try

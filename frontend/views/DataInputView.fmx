@@ -1,0 +1,43 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Container: TLayout
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Layout2: TLayout
+      Align = Client
+      Margins.Left = 100.000000000000000000
+      Margins.Top = 100.000000000000000000
+      Margins.Right = 100.000000000000000000
+      Margins.Bottom = 100.000000000000000000
+      Size.Width = 440.000000000000000000
+      Size.Height = 280.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Edit1: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Center
+        TabOrder = 0
+        Size.Width = 281.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        object CityEdit: TLabel
+          Anchors = []
+          Position.X = 1.000000000000000000
+          Position.Y = -27.000000000000000000
+          Text = 'Input your city'
+        end
+      end
+    end
+  end
+end

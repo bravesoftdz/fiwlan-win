@@ -82,8 +82,13 @@
         <DCCReference Include="deps\WlanAPI\nduNtDDNdis.pas"/>
         <DCCReference Include="deps\WlanAPI\nduWinDot11.pas"/>
         <DCCReference Include="deps\WlanAPI\nduWinNT.pas"/>
-        <DCCReference Include="WlanInfo.pas"/>
+        <DCCReference Include="FIWClasses.pas"/>
         <DCCReference Include="WindowsWlanGetter.pas"/>
+        <DCCReference Include="WindowsLocationInfo.pas"/>
+        <DCCReference Include="FIWSender.pas"/>
+        <DCCReference Include="deps\x-superobject\XSuperJSON.pas"/>
+        <DCCReference Include="deps\x-superobject\XSuperObject.pas"/>
+        <None Include="deps\x-superobject\XSuperObject.inc"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
