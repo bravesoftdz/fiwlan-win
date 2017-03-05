@@ -1,9 +1,11 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'fiwlan'
   ClientHeight = 480
   ClientWidth = 640
+  Position = DesktopCenter
+  WindowState = wsMaximized
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -15,5 +17,11 @@ object Form1: TForm1
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
+    OnLoadEnd = ChromiumFMX1LoadEnd
+    OnRequestGeolocationPermission = ChromiumFMX1RequestGeolocationPermission
+    object AniIndicator1: TAniIndicator
+      Align = Center
+      Enabled = True
+    end
   end
 end

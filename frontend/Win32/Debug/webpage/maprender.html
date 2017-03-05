@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<style>@import "fiwlan.css";</style>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+<link rel="stylesheet" type="text/css" href="https://js.cit.api.here.com/v3/3.0/mapsjs-ui.css" />
+<script type="text/javascript" src="https://js.cit.api.here.com/v3/3.0/mapsjs-core.js"></script>
+<script type="text/javascript" src="https://js.cit.api.here.com/v3/3.0/mapsjs-service.js"></script>
+<script type="text/javascript" src="https://js.cit.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+<script type="text/javascript" src="https://js.cit.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-pano.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+  <div style="width: 100%; height: 100vh" id="map"></div>
+<p><button onclick="geoFindMe()">Show my location</button></p>
+<div id="out"></div>
+  <script  type="text/javascript" charset="UTF-8" >
+  
+  
+  function addMarkerToGroup(group, coordinate, html) {
+  var marker = new H.map.Marker(coordinate);
+  // add custom data to the marker
+  marker.setData(html);
+  group.addObject(marker);
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  var svgMarkup = '<svg  width="24" height="24" xmlns="http://www.w3.org/2000/svg">' +
+	'<rect stroke="black" fill="${FILL}" x="1" y="1" width="22" height="22" />' +
+	'<text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" ' +
+	'text-anchor="middle" fill="${STROKE}" >C</text></svg>';
+    
+
+/**
+ * Adds markers to the map highlighting the locations of the captials of
+ * France, Italy, Germany, Spain and the United Kingdom.
+ *
+ * @param  {H.Map} map      A HERE Map instance within the application
+ */
+
+
+function mappador(inLat,inLong,group){
+		map.setCenter({lat:inLat,lng:inLong});
+		map.setViewBounds(group.getBounds());
+		//map.addObjects(group.getObjects());
+}
+function geoFindMe() {
+	var output = document.getElementById("out");
+	
+	var url = "https://pos.cit.api.here.com/positioning/v1/locate?app_id=VVu6ErbBOMAvu2OBpVGE&app_code=utpOMy94Nqp3H9B2Lg5V1w"
+	var method = "POST";
+	var postData = '{"gsm": [{"mcc": 262,"mnc": 1,"lac": 5126,"cid": 21857}}'
+	var async = true;
+	var request = new XMLHttpRequest();
+	request.onload = function () {
+		var status = request.status;
+		var data = request.responseText;
+		var parsed = JSON.parse(data)
+
+		map.removeObjects(map.getObjects());
+
+
+		var group = getFromServerFake(parsed["lat"],parsed["lng"]);
+		
+
+		mappador(parsed["lat"],parsed["lng"],group);
+		
+		output.innerHTML = '<p>Latitude is ' + parsed["lat"] + '° <br>Longitude is ' + parsed["lng"] + '°</p>';
+	}
+	request.open(method, url, async);
+	request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	request.send(postData);
+	// if (!navigator.geolocation){
+// 		output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+// 		return;
+// 	}
+// 
+// 	function success(position) {
+// 		var latitude  = position.coords.latitude;
+// 		var longitude = position.coords.longitude;
+// 		
+// 		map.removeObjects(map.getObjects());
+// 		var group = getFromServerFake(latitude,longitude);
+// 		
+// 		
+// 		
+// 		mappador(latitude,longitude,group);
+// 		
+// 		
+// 
+// 		output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+// 
+//    
+// 	}
+// 
+// 	function error() {
+// 		var url = "https://pos.cit.api.here.com/positioning/v1/locate?app_id=VVu6ErbBOMAvu2OBpVGE&app_code=utpOMy94Nqp3H9B2Lg5V1w"
+// 		var method = "POST";
+// 		var data = '{"gsm": [{"mcc": 262,"mnc": 1,"lac": 5126,"cid": 21857}}'
+// 		var async = true;
+// 		var request = new XMLHttpRequest();
+// 		request.onload = function () {
+// 			var status = request.status;
+// 			var data = request.responseText;
+// 			var parsed = JSON.parse(data)
+// 			map.removeObjects(map.getObjects());
+// 			var group = getFromServerFake(latitude,longitude);
+// 			
+// 			
+// 			mappador(parsed["lat"],parsed["lng"],group);
+// 			
+// 			output.innerHTML = '<p>Latitude is ' + parsed["lat"] + '° <br>Longitude is ' + parsed["lng"] + '°</p>';
+// 		}
+// 		request.open(method, url, async);
+// 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+// 		request.send(postData);
+// 		
+// 	}
+
+	output.innerHTML = "<p>Locating…</p>";
+
+	//navigator.geolocation.getCurrentPosition(success, error);
+}
+//this is the part where I GET from the server
+function getFromServer(latitude,longitude){
+
+	
+
+	var xmlhttp = new XMLHttpRequest();
+	var url = "\\apiddress\\";
+	
+	xmlhttp.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status==200){
+			var wifis = JSON.parse(this.responseText);
+			parsorum(wifis);
+		}
+	}
+	xmlhttp.open("GET",url,true);
+	xmlhttp.send();
+	
+}
+
+function getFromServerFake(latitude,longitude){
+	return parsorum(JSON.parse(
+	'{"WIFIS":[{"name":"LONGMNAMELONGLONG","longitude":13.4,"latitude":52.21},{"name":"Test2","longitude":15.4,"latitude":40.21},{"name":"Test3","longitude":10.4,"latitude":23.21}]}'));
+}
+
+
+
+function parsorum(wifis){
+	
+	
+    var group = new H.map.Group();
+    map.addObject(group);
+    var purg = []
+
+	for (i = 0; i < wifis.WIFIS.length; i ++){
+	
+		var name = wifis.WIFIS[i]["name"];
+	
+		var svgMarkup = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-3 -3 64 64"><circle cx="24" cy="24" r="24" stroke="black" stroke-width="3" fill="white" /><path d="M2 18l4 4c9.94-9.94 26.06-9.94 36 0l4-4C33.85 5.85 14.15 5.85 2 18zm16 16l6 6 6-6c-3.31-3.31-8.69-3.31-12 0zm-8-8l4 4c5.52-5.52 14.48-5.52 20 0l4-4c-7.73-7.73-20.27-7.73-28 0z"/></svg>';
+	
+		var interIcon = new H.map.Icon(svgMarkup.replace('${FILL}', 'blue').replace('${STROKE}', 'red').replace("${STRLEN}",name.length*10).replace("${STRLEN2}",name.length*5).replace("${STRLEN3}",name.length*5).replace("${STRLEN4}",name.length*2).replace("${STRLEN5}",name.length*2));
+		
+    
+   		var lat = wifis.WIFIS[i]["latitude"];
+   	 	var lon = wifis.WIFIS[i]["longitude"];
+
+
+      
+    	var interMarker = new H.map.Marker({lat:lat,lng:lon},{icon: interIcon});
+    	interMarker.setData('<div>Wifi Name:'+name+'</div><br>'+
+    		'<img src="n0az.jpg" alt="Smiley face" height="100%" width="100%">');
+		//map.addObject(interMarker);
+		//purg.push(interMarker);
+		group.addObject(interMarker);
+		
+	}
+	
+	//var group = new H.map.Group();
+	//group.addObjects(purg);
+	
+	 group.addEventListener('tap', function (evt) {
+    // event target is the marker itself, group is a parent event target
+    // for all objects that it contains
+    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+      // read custom data
+      content: evt.target.getData()
+    });
+    // show info bubble
+    ui.addBubble(bubble);
+  }, false);
+	
+	return group;
+
+
+}
+
+
+
+/**
+ * Boilerplate map initialization code starts below:
+ */
+
+//Step 1: initialize communication with the platform
+var platform = new H.service.Platform({
+  app_id: 'VVu6ErbBOMAvu2OBpVGE',
+  app_code: 'utpOMy94Nqp3H9B2Lg5V1w',
+  useCIT: true,
+  useHTTPS: true
+});
+var defaultLayers = platform.createDefaultLayers();
+
+//Step 2: initialize a map - this map is centered over Europe
+var map = new H.Map(document.getElementById('map'),
+  defaultLayers.normal.map,{
+  center: {lat:50, lng:5},
+  zoom: 4
+});
+
+//Step 3: make the map interactive
+// MapEvents enables the event system
+// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+// Create the default UI components
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+// Now use the map as required...
+  </script>
+</body>
+</html>
