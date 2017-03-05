@@ -35,6 +35,7 @@ begin
     for Network in Info do
     begin
       try
+        Writeln('Sending network called ' + Network.Name);
         URL := 'http://' + SERVER_IP + ':' + SERVER_PORT +
           '/' + SERVER_ENDPOINT + '?' +
           'name=' + Network.Name + '&' +
