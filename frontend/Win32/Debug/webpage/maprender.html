@@ -13,8 +13,9 @@
 </head>
 <body>
   <div style="width: 100%; height: 97vh" id="map"></div>
-<p><button onclick="geoFindMe()">Show my location</button></p>
-<div id="out"></div>
+<p><button onclick="geoFindMe()">Find Wifi near me</button></p>
+<div id="lat" style="height:-100vh"></div>
+<div id="long" style="height:-100vh"></div>
   <script  type="text/javascript" charset="UTF-8" >
   
   
@@ -29,15 +30,16 @@
   
   
   
+var latitude  = 52.505616;
+var longitude = 13.393037;
   
-  
-  
-  
-  var svgMarkup = '<svg  width="24" height="24" xmlns="http://www.w3.org/2000/svg">' +
-	'<rect stroke="black" fill="${FILL}" x="1" y="1" width="22" height="22" />' +
-	'<text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" ' +
-	'text-anchor="middle" fill="${STROKE}" >C</text></svg>';
-    
+
+
+var svgMarkup = '<svg  width="24" height="24" xmlns="http://www.w3.org/2000/svg">' +
+'<rect stroke="black" fill="${FILL}" x="1" y="1" width="22" height="22" />' +
+'<text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" ' +
+'text-anchor="middle" fill="${STROKE}" >C</text></svg>';
+
 
 /**
  * Adds markers to the map highlighting the locations of the captials of
@@ -52,136 +54,101 @@ function mappador(inLat,inLong,group){
 		map.setViewBounds(group.getBounds());
 		//map.addObjects(group.getObjects());
 }
+
+var standortMarkup = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path d="M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>';
+
+	  // Add the first marker
+var standortIcon = new H.map.Icon(standortMarkup);
+
+
+var first = true;
+
+
 function geoFindMe() {
-	var output = document.getElementById("out");
 	
-	var url = "https://pos.cit.api.here.com/positioning/v1/locate?app_id=VVu6ErbBOMAvu2OBpVGE&app_code=utpOMy94Nqp3H9B2Lg5V1w"
-	var method = "POST";
-	var postData = '{"gsm": [{"mcc": 262,"mnc": 1,"lac": 5126,"cid": 21857}}'
-	var async = true;
-	var request = new XMLHttpRequest();
-	request.onload = function () {
-		var status = request.status;
-		var data = request.responseText;
-		var parsed = JSON.parse(data)
-
+	if (first){
 		map.removeObjects(map.getObjects());
-
-
-		var group = getFromServerFake(parsed["lat"],parsed["lng"]);
+		first=false;
+	}else{
 		
 
-		mappador(parsed["lat"],parsed["lng"],group);
+		var interArray = map.getObjects();
 		
-		output.innerHTML = '<p>Latitude is ' + parsed["lat"] + '° <br>Longitude is ' + parsed["lng"] + '°</p>';
+		map.removeObject(interArray[0]);
+		
 	}
-	request.open(method, url, async);
-	request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	request.send(postData);
-	// if (!navigator.geolocation){
-// 		output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
-// 		return;
-// 	}
-// 
-// 	function success(position) {
-// 		var latitude  = position.coords.latitude;
-// 		var longitude = position.coords.longitude;
-// 		
-// 		map.removeObjects(map.getObjects());
-// 		var group = getFromServerFake(latitude,longitude);
-// 		
-// 		
-// 		
-// 		mappador(latitude,longitude,group);
-// 		
-// 		
-// 
-// 		output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
-// 
-//    
-// 	}
-// 
-// 	function error() {
-// 		var url = "https://pos.cit.api.here.com/positioning/v1/locate?app_id=VVu6ErbBOMAvu2OBpVGE&app_code=utpOMy94Nqp3H9B2Lg5V1w"
-// 		var method = "POST";
-// 		var data = '{"gsm": [{"mcc": 262,"mnc": 1,"lac": 5126,"cid": 21857}}'
-// 		var async = true;
-// 		var request = new XMLHttpRequest();
-// 		request.onload = function () {
-// 			var status = request.status;
-// 			var data = request.responseText;
-// 			var parsed = JSON.parse(data)
-// 			map.removeObjects(map.getObjects());
-// 			var group = getFromServerFake(latitude,longitude);
-// 			
-// 			
-// 			mappador(parsed["lat"],parsed["lng"],group);
-// 			
-// 			output.innerHTML = '<p>Latitude is ' + parsed["lat"] + '° <br>Longitude is ' + parsed["lng"] + '°</p>';
-// 		}
-// 		request.open(method, url, async);
-// 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-// 		request.send(postData);
-// 		
-// 	}
+	getFromServer(latitude,longitude);
+	
+	
+	//mappador(latitude,longitude,group);
+	
+	var standortMarker = new H.map.Marker({lat: latitude, lng: longitude },
+		  {icon: standortIcon});
+	standortMarker.draggable=true;
+	map.addObject(standortMarker);
+	
+	
+	
+	
 
-	output.innerHTML = "<p>Locating…</p>";
-
-	//navigator.geolocation.getCurrentPosition(success, error);
 }
 //this is the part where I GET from the server
 function getFromServer(latitude,longitude){
 
-	
 
-	var xmlhttp = new XMLHttpRequest();
-	var url = "\\apiddress\\";
+	var xmlHttp = new XMLHttpRequest();
+	var url = "http://192.168.43.40:5678/?lat="+latitude+"F&long="+longitude+"F";
+	var wifis;
 	
-	xmlhttp.onreadystatechange = function(){
-		if (this.readyState == 4 && this.status==200){
-			var wifis = JSON.parse(this.responseText);
-			parsorum(wifis);
+	xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+			wifis = JSON.parse(this.responseText);
+			parsorum(JSON.parse(this.responseText));
+
 		}
-	}
-	xmlhttp.open("GET",url,true);
-	xmlhttp.send();
+    }
+	xmlHttp.open("GET", url, false); // true for asynchronous 
+    xmlHttp.send(null);
+
 	
 }
 
 function getFromServerFake(latitude,longitude){
-	return parsorum(JSON.parse(
-	'{"WIFIS":[{"name":"LONGMNAMELONGLONG","longitude":13.4,"latitude":52.21},{"name":"Test2","longitude":15.4,"latitude":40.21},{"name":"Test3","longitude":10.4,"latitude":23.21}]}'));
+	parsorum(JSON.parse(
+	'{"wifi_points":[{"netw_name":"@?=7<8:@<8","long":8.60488289243,"lat":1.42975126323},{"netw_name":"?=:=7:7988","long":9.25603332515,"lat":6.36146596581},{"netw_name":":7::=?>=:@","long":8.72371846604,"lat":2.68601099991},{"netw_name":"9:;:=?997>","long":7.80131235798,"lat":7.27084208115},{"netw_name":"9;<7@=:8:<","long":3.40371040806,"lat":9.30437661402},{"netw_name":"=777;98<<=","long":5.54077435708,"lat":8.3263905403},{"netw_name":";77@@;8?:7","long":0.717920193705,"lat":0.528991249162},{"netw_name":"<:9;>;@79@","long":7.11076516418,"lat":8.83945127217},{"netw_name":"7@>=7@>><=","long":7.36509887108,"lat":1.32162323424},{"netw_name":"<7=<7>=;87","long":7.90156856779,"lat":2.70024866}]}'));
 }
 
 
 
 function parsorum(wifis){
 	
-	
     var group = new H.map.Group();
     map.addObject(group);
     var purg = []
 
-	for (i = 0; i < wifis.WIFIS.length; i ++){
+	for (i = 0; i < wifis.wifi_points.length; i ++){
 	
-		var name = wifis.WIFIS[i]["name"];
+		var name = wifis.wifi_points[i]["netw_name"];
 	
 		var svgMarkup = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-3 -3 64 64"><circle cx="24" cy="24" r="24" stroke="black" stroke-width="3" fill="white" /><path d="M2 18l4 4c9.94-9.94 26.06-9.94 36 0l4-4C33.85 5.85 14.15 5.85 2 18zm16 16l6 6 6-6c-3.31-3.31-8.69-3.31-12 0zm-8-8l4 4c5.52-5.52 14.48-5.52 20 0l4-4c-7.73-7.73-20.27-7.73-28 0z"/></svg>';
 	
 		var interIcon = new H.map.Icon(svgMarkup.replace('${FILL}', 'blue').replace('${STROKE}', 'red').replace("${STRLEN}",name.length*10).replace("${STRLEN2}",name.length*5).replace("${STRLEN3}",name.length*5).replace("${STRLEN4}",name.length*2).replace("${STRLEN5}",name.length*2));
 		
     
-   		var lat = wifis.WIFIS[i]["latitude"];
-   	 	var lon = wifis.WIFIS[i]["longitude"];
+   		var lat = wifis.wifi_points[i]["lat"];
+   	 	var lon = wifis.wifi_points[i]["long"];
 
 
-      
-    	var interMarker = new H.map.Marker({lat:lat,lng:lon},{icon: interIcon});
-    	interMarker.setData('<div>Wifi Name:'+name+'</div><br>'+
-    		'<img src="n0az.jpg" alt="Smiley face" height="100%" width="100%">');
+		
+		var interMarker = new H.map.Marker({lat:lat,lng:lon},{icon: interIcon});
+		interMarker.setData('<div>Wifi Name:'+name+'</div><br>'+
+		'<img src = https://maps.googleapis.com/maps/api/streetview?size=400x400&location='+lat+','+lon+'&heading=90&pitch=-0.76&key=AIzaSyCIXgVCXgMqE-JIx3eMWgxNQG4Ov_E9WJg>');
 		//map.addObject(interMarker);
-		//purg.push(interMarker);
+		purg.push(interMarker);
+		
+
 		group.addObject(interMarker);
+    	
 		
 	}
 	
@@ -198,8 +165,11 @@ function parsorum(wifis){
     // show info bubble
     ui.addBubble(bubble);
   }, false);
+  
+	map.setCenter({lat:latitude,lng:longitude});
+	map.setViewBounds(group.getBounds());
+
 	
-	return group;
 
 
 }
@@ -219,12 +189,23 @@ var platform = new H.service.Platform({
 });
 var defaultLayers = platform.createDefaultLayers();
 
+
+
 //Step 2: initialize a map - this map is centered over Europe
 var map = new H.Map(document.getElementById('map'),
   defaultLayers.normal.map,{
-  center: {lat:50, lng:5},
-  zoom: 4
+  center: {lat:52.505616, lng:13.393037},
+  zoom: 15
 });
+
+
+
+var standortMarker = new H.map.Marker({lat: 52.505616, lng: 13.393037 },
+		  {icon: standortIcon});
+standortMarker.draggable=true;
+map.addObject(standortMarker);
+
+
 
 //Step 3: make the map interactive
 // MapEvents enables the event system
@@ -233,6 +214,35 @@ var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
 // Create the default UI components
 var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+map.addEventListener('dragstart', function(ev) {
+    var target = ev.target;
+    if (target instanceof H.map.Marker) {
+      behavior.disable();
+    }
+  }, false);
+
+
+  // re-enable the default draggability of the underlying map
+  // when dragging has completed
+  map.addEventListener('dragend', function(ev) {
+    var target = ev.target;
+    if (target instanceof mapsjs.map.Marker) {
+      behavior.enable();
+    }
+  }, false);
+
+  // Listen to the drag event and move the position of the marker
+  // as necessary
+   map.addEventListener('drag', function(ev) {
+    var target = ev.target,
+        pointer = ev.currentPointer;
+    if (target instanceof mapsjs.map.Marker) {
+      target.setPosition(map.screenToGeo(pointer.viewportX, pointer.viewportY));
+      latitude=pointer.viewPortX;
+      longitude=pointer.viewportY;
+    }
+  }, false);
 
 // Now use the map as required...
   </script>

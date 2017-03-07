@@ -1,0 +1,12 @@
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: hand;
+  position:absolute;
+  top:85%;
+  left:2.4%;
+  font-size:16px;
+}

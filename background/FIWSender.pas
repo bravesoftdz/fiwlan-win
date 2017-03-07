@@ -14,7 +14,7 @@ end;
 
 const
 
-SERVER_IP='192.168.43.105';
+SERVER_IP='192.168.43.40';
 SERVER_PORT='5678';
 SERVER_ENDPOINT='';
 
@@ -41,7 +41,9 @@ begin
           'name=' + Network.Name + '&' +
           'lat=' + FloatTostr(Network.Location.Latitude,FS) + 'F&' +
           'long=' + FloatToStr(Network.Location.Longitude,FS) + 'F';
+        Writeln(URL);
         Response:=Client.Post(URL,StringList);
+        Writeln(Response.ContentAsString());
       except
         continue;
        end;
